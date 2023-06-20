@@ -16,3 +16,17 @@ body {
   background-color: rgba(0 0 0 / 20%);
   box-shadow: 0 2px 6px rgba(0 0 0 / 20%);
 }
+
+.user-points {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 14px;
+  color: #c1254b;
+  font-weight: 600;
+  span {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgba(255 255 255 / 60%);
+  }
+}

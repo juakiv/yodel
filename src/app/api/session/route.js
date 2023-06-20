@@ -7,9 +7,7 @@ export async function GET(request) {
   const sessionToken = cookieStore.get("sessionToken")?.value ?? null;
 
   if(!sessionToken) {
-    const response = NextResponse.json({
-      user: null
-    });
+    const response = NextResponse.json({ isLoggedIn: false });
 
     return response;
   }
@@ -33,9 +31,7 @@ export async function GET(request) {
   });
 
   if(!user) {
-    const response = NextResponse.json({
-      user: null
-    });
+    const response = NextResponse.json({ isLoggedIn: false});
 
     response.cookies.delete("sessionToken");
 
@@ -43,6 +39,7 @@ export async function GET(request) {
   }
 
   return NextResponse.json({
-    user: user.user
+    ...user.user,
+    isLoggedIn: true
   });
 }
