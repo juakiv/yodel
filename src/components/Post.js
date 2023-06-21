@@ -1,6 +1,4 @@
 export default function Post({ post }) {
-  const colors = ["yellow", "red", "lilac", "aqua", "green"];
-
   return (
     <>
       <div className="post">
@@ -13,7 +11,7 @@ export default function Post({ post }) {
               minute: "numeric"
             }).format(new Date(post.createdAt))}
           </div>
-          <div className={`post-text post-text--${colors[Math.floor(Math.random() * colors.length)]}`}>
+          <div className={`post-text post-text--${post.color.toLowerCase()}`}>
             {post.content}
           </div>
           <div className="post-bottom">

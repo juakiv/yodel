@@ -12,6 +12,7 @@ export async function GET(request) {
     select: {
       id: true,
       content: true,
+      color: true,
       createdAt: true
     },
     take: 10
@@ -29,14 +30,24 @@ export async function POST(request) {
 
   const data = await request.json();
 
+  if (data.content === null || data.content === "") {
+    return NextResponse.json({ success: false }, { status: 422 });
+  }
+  
+  if(!("color" in data) || !("color" in data && ["yellow", "red", "lilac", "aqua", "green"].includes(data.color))) {
+    return NextResponse.json({ success: false }, { status: 422 });
+  }
+
   const newPost = await prisma.post.create({
     data: {
       userId: user.id,
-      content: data.content
+      content: data.content,
+      color: data.color.toUpperCase()
     },
     select: {
       content: true,
-      createdAt: true
+      createdAt: true,
+      color: true
     }
   });
 
