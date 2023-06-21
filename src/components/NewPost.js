@@ -5,7 +5,10 @@ export default function NewPost() {
     event.preventDefault();
     const formData = new FormData(event.target);
 
-    
+    fetch("/api/posts", {
+      method: "POST",
+      body: JSON.stringify(Object.fromEntries(formData))
+    });
   }
   return (
     <form onSubmit={e => onSubmit(e)}>

@@ -1,45 +1,11 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import prisma from "@/lib/prisma";
+import validateServerSession from "@/lib/server/validateServerSession";
 
 export async function GET(request) {
-  const cookieStore = cookies();
-  const sessionToken = cookieStore.get("sessionToken")?.value ?? null;
-
-  if(!sessionToken) {
-    const response = NextResponse.json({ isLoggedIn: false });
-
-    return response;
-  }
-  
-  const user = await prisma.session.findFirst({
-    where: {
-      token: sessionToken,
-      expiresAt: {
-        gte: new Date()
-      }
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          email: true,
-          points: true
-        }
-      }
-    }
-  });
-
-  if(!user) {
-    const response = NextResponse.json({ isLoggedIn: false});
-
-    response.cookies.delete("sessionToken");
-
-    return response;
-  }
+  const user = await validateServerSession();
 
   return NextResponse.json({
-    ...user.user,
-    isLoggedIn: true
+    ...user,
+    isLoggedIn: user ? true : false
   });
 }
