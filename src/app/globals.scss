@@ -17,6 +17,22 @@ body {
   box-shadow: 0 2px 6px rgba(0 0 0 / 20%);
 }
 
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  margin-right: 16px;
+}
+
+.header {
+  background-color: #161616;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .user-points {
   text-transform: uppercase;
   text-align: center;
@@ -29,6 +45,11 @@ body {
     font-weight: bold;
     color: rgba(255 255 255 / 60%);
   }
+}
+
+.posts {
+  background-color: #111111;
+  padding: 10px;
 }
 
 .post {
@@ -98,6 +119,47 @@ body {
       text-align: center;
       font-weight: bold;
       margin: 3px 0;
+    }
+  }
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.post-comments {
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+
+.post-comment {
+  padding: 12px;
+  border-radius: 6px;
+  margin-left: 30px;
+  margin-bottom: 5px;
+  position: relative;
+  background-color: rgba(255 255 255 / 5%);
+  display: flex;
+  flex-direction: row;
+  &::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -16px;
+    border-left: 2px solid rgba(255 255 255 / 10%);
+    width: 14px;
+    height: calc(100% + 5px);
+  }
+  &:last-of-type::before {
+    border-bottom: 2px solid rgba(255 255 255 / 10%);
+    border-bottom-left-radius: 6px;
+    height: 26px;
+  }
+  .post-votes {
+    font-size: 16px;
+    margin-right: 6px;
+    svg {
+      width: 20px;
+      height: 20px;
     }
   }
 }

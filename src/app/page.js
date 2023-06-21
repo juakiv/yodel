@@ -24,11 +24,13 @@ export default function Home() {
   return (
     <>
       <div className="header">
+        <img className="logo" src="/logo.png" />
         <Points />
       </div>
-      <NewPost />
-
-      {posts.map(post => <Post post={post} key={post.id} /> )}      
+      <div className="posts">
+        <NewPost />
+        {posts.map(post => <Post post={post} key={post.id} /> )}      
+      </div>
     </>
   )
 }
