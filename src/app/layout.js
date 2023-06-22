@@ -1,9 +1,12 @@
+"use client";
+
 import "./globals.scss";
 import { Inter, Lobster } from "next/font/google";
 
 import Points from "@/components/Points";
 import UserMenu from "@/components/UserMenu";
 import Link from "next/link";
+import useSession from "@/lib/useSession";
 
 const inter = Inter({ subsets: ["latin"] });
 const lobster = Lobster({ subsets: ["latin"], weight: ["400"] });
@@ -19,6 +22,8 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+  const { user } = useSession();
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -28,12 +33,15 @@ export default function RootLayout({ children }) {
               <img className="logo" src="/logo.png" />
               <span className={lobster.className}>Yodel</span>
             </Link>
-            <div className="header-user-area">
+            {user && <div className="header-user-area">
               <Points />
               <UserMenu />
-            </div>
+            </div>}
           </div>
-          {children}
+          {user ? children : 
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+          </div>}
         </div>
       </body>
     </html>
