@@ -356,36 +356,6 @@ textarea {
   }
 }
 
-.loading {
-  &-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-  }
-
-  &-spinner {
-    width: 60px;
-    height: 60px;
-    border: 5px solid #FFF;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-  }
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .post-loading {
   position: relative;
   background-color: rgba(255 255 255 / 2%);

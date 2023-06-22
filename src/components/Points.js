@@ -4,9 +4,14 @@ import useSession from "@/lib/useSession";
 
 export default function Points() {
   const { user } = useSession();
+
+  if(!user || (user && !user.isLoggedIn)) {
+    return <></>
+  }
+
   return (
     <div className="user-points">
-      {user && "points" in user ? <span>{user.points}</span> : <span>pöö</span>}
+      <span>{user.points}</span>
       PISTEET
     </div>
   )
