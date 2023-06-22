@@ -1,17 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Lobster } from "next/font/google";
 
 import NewPost from "@/components/NewPost";
-import Points from "@/components/Points";
 import Post from "@/components/Post";
 import useSession from "@/lib/useSession";
 
-const lobster = Lobster({ subsets: ["latin"], weight: ["400"] });
 
 export default function Home() {
-
   const { user } = useSession();
 
   const [posts, setPosts] = useState([]);
@@ -30,13 +26,6 @@ export default function Home() {
 
   return (
     <>
-      <div className="header">
-        <div className="logo">
-          <img className="logo" src="/logo.png" />
-          <span className={lobster.className}>Yodel</span>
-        </div>
-        <Points />
-      </div>
       <div className="posts">
         <div className="posts-top">
           <div className="posts-sorting">Uusimmat Tykätyimmät Kommentoiduimmat</div>
