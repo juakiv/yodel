@@ -13,7 +13,7 @@ export default function UserMenu() {
         {user && user.isLoggedIn &&<a>Kirjaudu ulos</a>}
         {user && !user.isLoggedIn &&<>
         <Link href="/login">Kirjaudu sisään</Link>
-        <a>Luo tili</a>
+        <Link href="/register">Luo tili</Link>
         </>}
       </div>
     </div>

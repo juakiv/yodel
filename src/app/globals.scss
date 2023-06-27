@@ -42,15 +42,13 @@ button {
   }
 }
 
-textarea {
+textarea, input[type="email"], input[type="password"] {
   background-color: rgba(255 255 255 / 4%);
   border: none;
   border-radius: 6px;
   width: 100%;
   font-family: inherit;
   font-size: 16px;
-  resize: vertical;
-  min-height: 120px;
   padding: 10px 16px;
   color: #ffffff;
   outline: none;
@@ -58,6 +56,12 @@ textarea {
   &:focus {
     box-shadow: 0 0 0 3px #111111, 0 0 0 5px rgba(147 197 253 / 40%);
   }
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+  min-height: 120px;
 }
 
 .container {
@@ -381,5 +385,27 @@ textarea {
 
   100% {
     background-position: 1000px 0;
+  }
+}
+
+.auth-page {
+  margin: 40px 20px;
+  text-align: center;
+
+  form {
+    margin-top: 40px;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    input {
+      margin: 6px auto 16px;
+      max-width: 300px;
+    }
+  }
+
+  button {
+    margin: 0 auto;
   }
 }
