@@ -1,5 +1,8 @@
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.scss";
+
 import { Inter, Lobster } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 
 import Points from "@/components/Points";
 import UserMenu from "@/components/UserMenu";
@@ -35,6 +38,7 @@ export default function RootLayout({ children }) {
           </div>
           {children}
         </div>
+        <ToastContainer />
       </body>
     </html>
   )

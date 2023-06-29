@@ -1,5 +1,7 @@
+"use client";
+
 import useSession from "@/lib/useSession";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function PostLikes({ postId, initialVotes, myVote }) {
 

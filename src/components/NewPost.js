@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function NewPost({ addNewPost }) {
   const colors = ["yellow", "red", "lilac", "aqua", "green"];
@@ -24,6 +25,7 @@ export default function NewPost({ addNewPost }) {
       addNewPost(post);
     } else {
       setSendingPost(false);
+      toast("Viestin lähettäminen epäonnistui.", { theme: "dark", autoClose: 5000, position: "top-center" });
     }
 
   }
