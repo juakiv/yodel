@@ -42,7 +42,9 @@ button {
   }
 }
 
-textarea, input[type="email"], input[type="password"] {
+textarea,
+input[type="email"],
+input[type="password"] {
   background-color: rgba(255 255 255 / 4%);
   border: none;
   border-radius: 6px;
@@ -202,8 +204,17 @@ textarea {
       svg {
         width: 24px;
         height: 24px;
-        fill: rgba(255 255 255 / 65%);
+        fill: rgba(255 255 255 / 40%);
         margin: 0;
+      }
+    }
+
+    &-status {
+      &--voted svg {
+        fill: white !important;
+      }
+      &--disabled {
+        cursor: not-allowed;
       }
     }
 
@@ -364,6 +375,7 @@ textarea {
   position: relative;
   background-color: rgba(255 255 255 / 2%);
   border-radius: 6px;
+
   &::before {
     content: "";
     position: absolute;
@@ -388,6 +400,28 @@ textarea {
   }
 }
 
+.loading-icon {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255 255 255 / 40%);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: loading-rotate 1s linear infinite;
+  margin: 3px 2px;
+}
+
+@keyframes loading-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .auth-page {
   margin: 40px 20px;
   text-align: center;
@@ -399,6 +433,7 @@ textarea {
   label {
     display: flex;
     flex-direction: column;
+
     input {
       margin: 6px auto 16px;
       max-width: 300px;

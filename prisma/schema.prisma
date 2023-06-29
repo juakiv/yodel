@@ -69,11 +69,12 @@ model Vote {
   type VoteType @default(UP)
 
   createdAt DateTime  @default(now())
-  updatedAy DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   @@index([userId])
   @@index([postId])
+  @@unique([userId, postId])
 }
 
 enum VoteType {
