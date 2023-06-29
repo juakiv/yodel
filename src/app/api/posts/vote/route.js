@@ -48,8 +48,18 @@ export async function POST(request) {
     }
   });
 
+  const calculatedVotes = vote.post.votes.reduce((score, obj) => score + (obj.type === "UP" ? 1 : obj.type === "DOWN" ? -1 : 0), 0);
+  await prisma.post.update({
+    where: {
+      id: data.post
+    },
+    data: {
+      votesCount: calculatedVotes
+    }
+  });
+
   return NextResponse.json({
     success: true,
-    votes: vote.post.votes.reduce((score, obj) => score + (obj.type === "UP" ? 1 : obj.type === "DOWN" ? -1 : 0), 0)
+    votes: calculatedVotes
   });
 }

@@ -6,7 +6,18 @@ import prisma from "@/lib/server/prisma";
 export async function GET(request) {
   const user = await validateServerSession();
 
+  let whereClause = {};
+  const params = request.nextUrl.searchParams;
+  if(params.has("last") && parseInt(params.get("last")) > 0) {
+    whereClause = {
+      createdAt: {
+        lt: new Date(parseInt(params.get("last"))).toISOString()
+      }
+    }
+  }
+
   const posts = await prisma.post.findMany({
+    where: whereClause,
     orderBy: [
       {
         createdAt: "desc"

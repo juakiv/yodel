@@ -479,3 +479,16 @@ textarea {
     margin: 0;
   }
 }
+
+.infinite-loading-icon {
+  border-top: 2px solid rgba(255 255 255 / 20%);
+  margin: 40px 0 30px;
+  position: relative;
+  .loading-icon-holder {
+    position: absolute;
+    top: -14px;
+    left: calc(50% - 10px);
+    background-color: #111111;
+    padding: 0 10px;
+  }
+}

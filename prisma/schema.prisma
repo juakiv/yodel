@@ -53,6 +53,7 @@ model Post {
   deletedAt DateTime?
 
   votes Vote[]
+  votesCount Int @default(0)
 
   @@index([userId])
 }
