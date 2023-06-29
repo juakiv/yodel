@@ -50,8 +50,8 @@ export async function POST(request) {
   if (data.content === null || data.content === "") {
     return NextResponse.json({ success: false }, { status: 422 });
   }
-  
-  if(!("color" in data) || !("color" in data && ["yellow", "red", "lilac", "aqua", "green"].includes(data.color))) {
+
+  if (!("color" in data) || !("color" in data && ["yellow", "red", "lilac", "aqua", "green"].includes(data.color))) {
     return NextResponse.json({ success: false }, { status: 422 });
   }
 
@@ -62,11 +62,12 @@ export async function POST(request) {
       color: data.color.toUpperCase()
     },
     select: {
+      id: true,
       content: true,
       createdAt: true,
       color: true
     }
   });
 
-  return NextResponse.json({ ...newPost });
+  return NextResponse.json({ success: true, post: { ...newPost, votes: 0, myVote: false } });
 }

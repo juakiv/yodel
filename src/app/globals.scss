@@ -26,6 +26,15 @@ button {
   align-items: center;
   font-weight: 500;
 
+  &:disabled {
+    opacity: 0.6;
+    filter: saturate(80%);
+
+    &:hover {
+      filter: saturate(90%);
+    }
+  }
+
   svg {
     width: 18px;
     height: 18px;
@@ -154,6 +163,8 @@ textarea {
   }
 
   &-text {
+    white-space: pre-wrap;
+
     &--yellow {
       color: #FABC2A;
     }
@@ -213,6 +224,7 @@ textarea {
       &--voted svg {
         fill: white !important;
       }
+
       &--disabled {
         cursor: not-allowed;
       }
@@ -410,6 +422,12 @@ textarea {
   box-sizing: border-box;
   animation: loading-rotate 1s linear infinite;
   margin: 3px 2px;
+
+  &--button {
+    width: 16px;
+    height: 16px;
+    margin: 0 10px 0 0;
+  }
 }
 
 @keyframes loading-rotate {

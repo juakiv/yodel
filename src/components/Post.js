@@ -22,13 +22,30 @@ export default function Post({ post }) {
         </div>
         <PostLikes postId={post.id} initialVotes={post.votes} myVote={post.myVote} />
       </div>
-      {post.id === 4000 && <div className="post-comments">
+      {post.id === 4 && <div className="post-comments">
         <div className="post-comment">
           <div className="post-area">
             <div className="post-details">
               <span>@1</span> &nbsp;&bull;&nbsp; 4m
             </div>
             <div className="post-text">kommentti</div>
+          </div>
+          <div className="post-votes">
+            <button>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" /></svg>
+            </button>
+            <div className="post-votes-count">0</div>
+            <button>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" /></svg>
+            </button>
+          </div>
+        </div>
+        <div className="post-comment">
+          <div className="post-area">
+            <div className="post-details">
+              <span>@ap</span> &nbsp;&bull;&nbsp; 4m
+            </div>
+            <div className="post-text">kommentti alkuperäiseltä postaajalta</div>
           </div>
           <div className="post-votes">
             <button>

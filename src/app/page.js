@@ -20,6 +20,11 @@ export default function Home() {
     setPosts(fetchedPosts);
   }
 
+  const addNewPost = post => {
+    setPosts(oldPosts => [post, ...oldPosts]);
+    setAddingPost(false);
+  }
+
   useEffect(() => {
     getPosts();
   }, []);
@@ -36,7 +41,7 @@ export default function Home() {
             </button>
           </div>}
         </div>
-        {addingPost && user && user.isLoggedIn && <NewPost />}
+        {addingPost && user && user.isLoggedIn && <NewPost addNewPost={addNewPost} />}
         {posts.length === 0 && [0, 1, 2, 3, 4, 5, 6, 7].map(loadingPost => <div key={loadingPost} className="post" style={{ flexDirection: "column"}}>
           <div className="post-loading" style={{width: 200, height: 16, marginBottom: 16}}></div>
           <div className="post-loading" style={{width: "50%", height: 20, marginBottom: 16}}></div>

@@ -2,25 +2,41 @@
 
 import { useState } from "react";
 
-export default function NewPost() {
-  const colors = ["yellow", "red", "lilac", "aqua", "green"]
-  const [selectedColor, setSelectedColor] = useState("yellow");
+export default function NewPost({ addNewPost }) {
+  const colors = ["yellow", "red", "lilac", "aqua", "green"];
 
-  const onSubmit = event => {
+  const [selectedColor, setSelectedColor] = useState("yellow");
+  const [sendingPost, setSendingPost] = useState(false);
+
+  const onSubmit = async event => {
     event.preventDefault();
     const formData = new FormData(event.target);
 
-    fetch("/api/posts", {
+    setSendingPost(true);
+
+    const result = await fetch("/api/posts", {
       method: "POST",
       body: JSON.stringify(Object.fromEntries(formData))
     });
+    const { success, post } = await result.json();
+
+    if (success) {
+      addNewPost(post);
+    } else {
+      setSendingPost(false);
+    }
+
   }
   return (
     <form className="new-post" onSubmit={e => onSubmit(e)}>
       <textarea name="content" placeholder="Mitä mielessä?"></textarea>
 
       <div className="new-post-controls">
-        <button type="submit">Yodlaa</button>
+        {sendingPost ?
+          <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Yodlaa</button>
+        :
+          <button type="submit">Yodlaa</button>
+        }
         <div className="color-selector">
           {colors.map(color =>
             <label key={color}>
