@@ -48,14 +48,19 @@ model Post {
   content String    @db.VarChar(1000)
   color   PostColor @default(GREEN)
 
+  parent Post? @relation("commentParent", fields: [parentPostId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentPostId Int?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  votes Vote[]
-  votesCount Int @default(0)
+  votes      Vote[]
+  votesCount Int    @default(0)
+  comment    Post[] @relation("commentParent")
 
   @@index([userId])
+  @@index([parentPostId])
 }
 
 model Vote {
@@ -73,9 +78,9 @@ model Vote {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  @@unique([userId, postId])
   @@index([userId])
   @@index([postId])
-  @@unique([userId, postId])
 }
 
 enum VoteType {

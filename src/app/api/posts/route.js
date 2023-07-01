@@ -6,10 +6,10 @@ import prisma from "@/lib/server/prisma";
 export async function GET(request) {
   const user = await validateServerSession();
 
-  let whereClause = {};
+  let infiniteLoadingClause = {};
   const params = request.nextUrl.searchParams;
   if(params.has("last") && parseInt(params.get("last")) > 0) {
-    whereClause = {
+    infiniteLoadingClause = {
       createdAt: {
         lt: new Date(parseInt(params.get("last"))).toISOString()
       }
@@ -17,7 +17,11 @@ export async function GET(request) {
   }
 
   const posts = await prisma.post.findMany({
-    where: whereClause,
+    where: {
+      ...infiniteLoadingClause,
+      parentPostId: null,
+      deletedAt: null
+    },
     orderBy: [
       {
         createdAt: "desc"
@@ -28,6 +32,11 @@ export async function GET(request) {
       content: true,
       color: true,
       createdAt: true,
+      _count: {
+        select: {
+          comment: true
+        }
+      },
       votes: {
         select: {
           type: true,
@@ -76,7 +85,12 @@ export async function POST(request) {
       id: true,
       content: true,
       createdAt: true,
-      color: true
+      color: true,
+      _count: {
+        select: {
+          comment: true
+        }
+      },
     }
   });
 
