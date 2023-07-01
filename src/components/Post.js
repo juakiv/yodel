@@ -29,6 +29,7 @@ export default function Post({ post, commentsOpen, openPost }) {
 
       setComments([...data]);
       setCommentsLoading(false);
+      post._count.comment = data.length;
     }
   }
 
@@ -83,7 +84,7 @@ export default function Post({ post, commentsOpen, openPost }) {
         {comments.map(comment => <div className="post-comment" key={comment.id}>
           <div className="post-area">
             <div className="post-details">
-              <span>@{comment.tag}</span> &nbsp;&bull;&nbsp; {new Intl.DateTimeFormat("fi-FI", {
+              <span>@{comment.commentTag === null ? "???" : comment.commentTag === 0 ? "ap" : comment.commentTag}</span> &nbsp;&bull;&nbsp; {new Intl.DateTimeFormat("fi-FI", {
                 month: "numeric",
                 day: "numeric",
                 hour: "numeric",

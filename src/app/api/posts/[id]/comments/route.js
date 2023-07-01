@@ -21,6 +21,7 @@ export async function GET(request, { params }) {
       content: true,
       createdAt: true,
       userId: true,
+      commentTag: true,
       parent: {
         select: {
           userId: true
@@ -40,7 +41,6 @@ export async function GET(request, { params }) {
 
     return {
       ...postWithoutUser,
-      tag: parent.userId === userId ? "ap" : "1",
       myVote: user ? post.votes.find(vote => vote.userId === user.id)?.type || false : false,
       votes: post.votes.reduce((score, obj) => score + (obj.type === "UP" ? 1 : obj.type === "DOWN" ? -1 : 0), 0),
     }
@@ -62,18 +62,53 @@ export async function POST(request, { params }) {
     return NextResponse.json({ success: false }, { status: 422 });
   }
 
+  const parentPost = await prisma.post.findFirst({
+    where: {
+      id: parseInt(params.id),
+      deletedAt: null
+    },
+    select: {
+      userId: true,
+      comment: {
+        select: {
+          userId: true,
+          commentTag: true
+        }
+      }
+    }
+  });
+
+  if(!parentPost) {
+    return NextResponse.json({ success: false }, { status: 422 });
+  }
+
+  let tag = 0;
+  if(parentPost.userId !== user.id) {
+    // onko käyttäjä osallistunut jo keskusteluun?
+    let myCurrentTag = parentPost.comment.find(comment => comment.userId === user.id);
+    if(myCurrentTag) {
+      // on, annetaan vanha tagi
+      tag = myCurrentTag.commentTag;
+    } else {
+      // ei ole, lasketaan uusi tagi
+      tag = parentPost.comment.length > 0 ? Math.max(...parentPost.comment.map(comment => comment.commentTag)) + 1 : 1;
+    }
+  }
+  
   const newPost = await prisma.post.create({
     data: {
       userId: user.id,
       content: data.content,
-      parentPostId: parseInt(params.id)
+      parentPostId: parseInt(params.id),
+      commentTag: tag
     },
     select: {
       id: true,
       content: true,
-      createdAt: true
+      createdAt: true,
+      commentTag: true
     }
   });
 
-  return NextResponse.json({ success: true, post: { ...newPost, tag: "1", votes: 0, myVote: false } });
+  return NextResponse.json({ success: true, post: { ...newPost, votes: 0, myVote: false } });
 }
