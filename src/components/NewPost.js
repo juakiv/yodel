@@ -36,7 +36,7 @@ export default function NewPost({ addNewPost }) {
       <div className="new-post-controls">
         {sendingPost ?
           <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Yodlaa</button>
-        :
+          :
           <button type="submit">Yodlaa</button>
         }
         <div className="color-selector">

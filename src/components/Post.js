@@ -5,15 +5,21 @@ import { useState } from "react";
 import PostLikes from "./PostLikes";
 import useSession from "@/lib/useSession";
 
-export default function Post({ post }) {
+export default function Post({ post, commentsOpen, openPost }) {
   const { user } = useSession();
 
-  const [commentsOpen, setCommentsOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
+  const [sendingComment, setSendingComment] = useState(false);
+  const [commentField, setCommentField] = useState("");
 
   const loadComments = async () => {
-    setCommentsOpen(!commentsOpen);
+    if (commentsOpen) {
+      openPost(0);
+    } else {
+      openPost(post.id);
+    }
+
     if (post._count.comment > 0 && !commentsOpen) {
       setCommentsLoading(true);
       setComments([]);
@@ -26,10 +32,30 @@ export default function Post({ post }) {
     }
   }
 
+  const submitComment = async event => {
+    event.preventDefault();
+    setSendingComment(true);
+
+    const result = await fetch(`/api/posts/${post.id}/comments`, {
+      method: "POST",
+      body: JSON.stringify({ content: commentField })
+    });
+    const { success, post: addedComment } = await result.json();
+    setSendingComment(false);
+
+    if (success) {
+      setCommentField("");
+      setComments([...comments, addedComment]);
+      post._count.comment++;
+    } else {
+      toast("Viestin lähettäminen epäonnistui.", { theme: "dark", autoClose: 5000, position: "top-center" });
+    }
+  }
+
   return (
     <>
-      <div className="post" onClick={() => loadComments()}>
-        <div className="post-area">
+      <div className="post">
+        <div className="post-area" onClick={() => loadComments()}>
           <div className="post-details">
             <span>@main</span> &nbsp;&bull;&nbsp; {new Intl.DateTimeFormat("fi-FI", {
               month: "numeric",
@@ -54,10 +80,10 @@ export default function Post({ post }) {
             <div className="loading-icon"></div>
           </div>
         </div>}
-        {comments.map(comment => <div className="post-comment">
+        {comments.map(comment => <div className="post-comment" key={comment.id}>
           <div className="post-area">
             <div className="post-details">
-              <span>@1</span> &nbsp;&bull;&nbsp; {new Intl.DateTimeFormat("fi-FI", {
+              <span>@{comment.tag}</span> &nbsp;&bull;&nbsp; {new Intl.DateTimeFormat("fi-FI", {
                 month: "numeric",
                 day: "numeric",
                 hour: "numeric",
@@ -69,10 +95,14 @@ export default function Post({ post }) {
           <PostLikes postId={comment.id} initialVotes={comment.votes} myVote={comment.myVote} />
         </div>
         )}
-        {user && user.isLoggedIn && <div className="post-comment">
-          <textarea placeholder="Kirjoita kommenttisi..." style={{ minHeight: 30, marginRight: 12 }}></textarea>
-          <button>Kommentoi</button>
-        </div>}
+        {user && user.isLoggedIn && <form className="post-comment" onSubmit={e => submitComment(e)}>
+          <textarea onChange={e => setCommentField(e.target.value)} value={commentField} placeholder="Kirjoita kommenttisi..." style={{ minHeight: 30, marginRight: 12 }}></textarea>
+          {sendingComment ?
+            <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Kommentoi</button>
+            :
+            <button type="submit">Kommentoi</button>
+          }
+        </form>}
       </div>}
     </>
   )

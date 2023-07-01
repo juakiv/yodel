@@ -11,6 +11,7 @@ export default function Home() {
   const { user } = useSession();
 
   const [posts, setPosts] = useState([]);
+  const [postOpen, setPostOpen] = useState(0);
   const [addingPost, setAddingPost] = useState(false);
 
   const infiniteLoadingRef = useRef(null);
@@ -73,12 +74,19 @@ export default function Home() {
           </div>}
         </div>
         {addingPost && user && user.isLoggedIn && <NewPost addNewPost={addNewPost} />}
-        {posts.length === 0 && [0, 1, 2, 3, 4, 5, 6, 7].map(loadingPost => <div key={loadingPost} className="post" style={{ flexDirection: "column" }}>
+        {posts.length === 0 && [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(loadingPost => <div key={loadingPost} className="post" style={{ flexDirection: "column" }}>
           <div className="post-loading" style={{ width: 200, height: 16, marginBottom: 16 }}></div>
           <div className="post-loading" style={{ width: "50%", height: 20, marginBottom: 16 }}></div>
           <div className="post-loading" style={{ width: 100, height: 12 }}></div>
         </div>)}
-        {posts.map(post => <Post post={post} key={post.id} />)}
+        {posts.map(post =>
+          <Post
+            commentsOpen={post.id === postOpen}
+            openPost={setPostOpen}
+            post={post}
+            key={post.id}
+          />
+        )}
         {!loadedAll && <div className="infinite-loading-bottom" ref={infiniteLoadingRef}>
           {loadingMore &&
             <div className="infinite-loading-icon">

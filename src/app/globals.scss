@@ -272,7 +272,7 @@ textarea {
     height: calc(100% + 5px);
   }
 
-  &:last-of-type::before {
+  &:last-child::before {
     border-bottom: 2px solid rgba(255 255 255 / 10%);
     border-bottom-left-radius: 6px;
     height: 26px;
