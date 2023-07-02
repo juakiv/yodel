@@ -41,6 +41,7 @@ export async function GET(request, { params }) {
 
     return {
       ...postWithoutUser,
+      myPost: user && userId === user.id ? true : false,
       myVote: user ? post.votes.find(vote => vote.userId === user.id)?.type || false : false,
       votes: post.votes.reduce((score, obj) => score + (obj.type === "UP" ? 1 : obj.type === "DOWN" ? -1 : 0), 0),
     }
@@ -110,5 +111,5 @@ export async function POST(request, { params }) {
     }
   });
 
-  return NextResponse.json({ success: true, post: { ...newPost, votes: 0, myVote: false } });
+  return NextResponse.json({ success: true, post: { ...newPost, votes: 0, myVote: false, myPost: true } });
 }

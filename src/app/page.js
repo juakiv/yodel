@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 import NewPost from "@/components/NewPost";
 import Post from "@/components/Post";
@@ -61,6 +62,22 @@ export default function Home() {
     return () => { if (infiniteLoadingRef.current) observer.unobserve(infiniteLoadingRef.current); }
   }, [infiniteLoadingRef]);
 
+  /* viestin poisto */
+  const deletePost = async postId => {
+    if(!confirm("Haluatko varmasti poistaa viestin?")) return false;
+    const req = await fetch(`/api/posts/${postId}`, {
+      method: "DELETE"
+    });
+    const { success } = await req.json();
+
+    if(success) {
+      setPosts([...posts.filter(post => post.id !== postId)]);
+      toast("Viesti poistettu.", { theme: "dark", autoClose: 5000, position: "top-center" });
+    } else {
+      toast("Viestin poistaminen epäonnistui.", { theme: "dark", autoClose: 5000, position: "top-center" });
+    }
+  }
+
   return (
     <>
       <div className="posts">
@@ -83,6 +100,7 @@ export default function Home() {
           <Post
             commentsOpen={post.id === postOpen}
             openPost={setPostOpen}
+            deletePost={deletePost}
             post={post}
             key={post.id}
           />
