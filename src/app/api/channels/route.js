@@ -12,7 +12,12 @@ export async function GET(request) {
       name: true,
       _count: {
         select: {
-          posts: true
+          posts: {
+            where: {
+              parentPostId: null,
+              deletedAt: null
+            }
+          }
         }
       }
     }

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import useSession from "@/lib/useSession";
+import { mutate } from "swr";
 
 export default function Login() {
   const { user } = useSession();
@@ -28,6 +29,7 @@ export default function Login() {
     const { success } = await result.json();
 
     if(success) {
+      mutate("/api/session");
       router.push("/");
       router.refresh();
     } else {

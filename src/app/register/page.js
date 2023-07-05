@@ -28,6 +28,7 @@ export default function Register() {
     const { success } = await result.json();
 
     if(success) {
+      mutate("/api/session");
       router.push("/");
       router.refresh();
     } else {

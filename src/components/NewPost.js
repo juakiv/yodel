@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function NewPost({ addNewPost }) {
+export default function NewPost({ addNewPost, channel }) {
   const colors = ["yellow", "red", "lilac", "aqua", "green"];
 
   const [selectedColor, setSelectedColor] = useState("yellow");
@@ -17,7 +17,7 @@ export default function NewPost({ addNewPost }) {
 
     const result = await fetch("/api/posts", {
       method: "POST",
-      body: JSON.stringify(Object.fromEntries(formData))
+      body: JSON.stringify({ channel, ...Object.fromEntries(formData) })
     });
     const { success, post } = await result.json();
 

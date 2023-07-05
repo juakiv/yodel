@@ -4,7 +4,6 @@ import "./globals.scss";
 import { Inter, Lobster } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 
-import Points from "@/components/Points";
 import UserMenu from "@/components/UserMenu";
 import Link from "next/link";
 import ChannelMenu from "@/components/ChannelMenu";
@@ -33,7 +32,6 @@ export default function RootLayout({ children }) {
               <span className={lobster.className}>Yodel</span>
             </Link>
             <div className="header-user-area">
-              {/* <Points /> */}
               <ChannelMenu />
               <UserMenu />
             </div>

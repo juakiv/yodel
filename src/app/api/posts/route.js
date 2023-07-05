@@ -29,6 +29,18 @@ export async function GET(request) {
     }
   }
 
+  let orderByClause = {};
+  if(params.has("sort")) {
+    const sortType = params.get("sort");
+    if(sortType === "mostCommented") {
+      orderByClause = {
+        comment: {
+          _count: "desc"
+        }
+      };
+    }
+  }
+
   const posts = await prisma.post.findMany({
     where: {
       ...infiniteLoadingClause,
@@ -37,6 +49,7 @@ export async function GET(request) {
       deletedAt: null
     },
     orderBy: [
+      orderByClause,
       {
         createdAt: "desc"
       }
@@ -94,18 +107,30 @@ export async function POST(request) {
     return NextResponse.json({ success: false }, { status: 422 });
   }
 
-  if (!("color" in data) || !("color" in data && ["yellow", "red", "lilac", "aqua", "green"].includes(data.color))) {
+  if (!("color" in data) || !("color" in data && ["yellow", "red", "lilac", "aqua", "green"].includes(data.color)) || !"channel" in data) {
     return NextResponse.json({ success: false }, { status: 422 });
   }
-
-  const channel = 1;
+  
+  const channel = await prisma.channel.findFirst({
+    where: {
+      name: data.channel
+    },
+    select: {
+      name: true,
+      id: true
+    }
+  });
+  
+  if(!channel) {
+    return NextResponse.json({ success: false }, { status: 422 });
+  }
 
   const newPost = await prisma.post.create({
     data: {
       userId: user.id,
       content: data.content,
       color: data.color.toUpperCase(),
-      channelId: channel
+      channelId: channel.id
     },
     select: {
       id: true,
@@ -120,5 +145,5 @@ export async function POST(request) {
     }
   });
 
-  return NextResponse.json({ success: true, post: { ...newPost, votes: 0, myVote: false, myPost: true } });
+  return NextResponse.json({ success: true, post: { ...newPost, channel: channel.name, votes: 0, myVote: false, myPost: true } });
 }
