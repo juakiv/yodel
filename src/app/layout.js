@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import Points from "@/components/Points";
 import UserMenu from "@/components/UserMenu";
 import Link from "next/link";
+import ChannelMenu from "@/components/ChannelMenu";
 
 const inter = Inter({ subsets: ["latin"] });
 const lobster = Lobster({ subsets: ["latin"], weight: ["400"] });
@@ -32,7 +33,8 @@ export default function RootLayout({ children }) {
               <span className={lobster.className}>Yodel</span>
             </Link>
             <div className="header-user-area">
-              <Points />
+              {/* <Points /> */}
+              <ChannelMenu />
               <UserMenu />
             </div>
           </div>

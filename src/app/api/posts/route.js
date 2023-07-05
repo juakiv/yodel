@@ -33,6 +33,11 @@ export async function GET(request) {
       color: true,
       createdAt: true,
       userId: true,
+      channel: {
+        select: {
+          name: true
+        }
+      },
       _count: {
         select: {
           comment: true
@@ -49,9 +54,10 @@ export async function GET(request) {
   });
 
   const postsWithComputedData = posts.map(post => {
-    const { userId, ...postWithoutUserId } = post;
+    const { userId, channel, ...postWithoutUserId } = post;
     return {
       ...postWithoutUserId,
+      channel: channel?.name || "main",
       myPost: user && userId === user.id ? true : false,
       myVote: user ? post.votes.find(vote => vote.userId === user.id)?.type || false : false,
       votes: post.votes.reduce((score, obj) => score + (obj.type === "UP" ? 1 : obj.type === "DOWN" ? -1 : 0), 0),
@@ -78,11 +84,14 @@ export async function POST(request) {
     return NextResponse.json({ success: false }, { status: 422 });
   }
 
+  const channel = 1;
+
   const newPost = await prisma.post.create({
     data: {
       userId: user.id,
       content: data.content,
-      color: data.color.toUpperCase()
+      color: data.color.toUpperCase(),
+      channelId: channel
     },
     select: {
       id: true,

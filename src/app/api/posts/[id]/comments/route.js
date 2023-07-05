@@ -70,6 +70,7 @@ export async function POST(request, { params }) {
     },
     select: {
       userId: true,
+      channelId: true,
       comment: {
         select: {
           userId: true,
@@ -101,7 +102,8 @@ export async function POST(request, { params }) {
       userId: user.id,
       content: data.content,
       parentPostId: parseInt(params.id),
-      commentTag: tag
+      commentTag: tag,
+      channelId: parentPost.channelId
     },
     select: {
       id: true,

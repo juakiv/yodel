@@ -74,7 +74,7 @@ export default function Post({ post, commentsOpen, deletePost, openPost }) {
       <div className="post">
         <div className="post-area" onClick={() => loadComments()}>
           <div className="post-details">
-            <span>@main</span> &nbsp;&bull;&nbsp; {new Intl.DateTimeFormat("fi-FI", {
+            <span>@{post.channel}</span> &nbsp;&bull;&nbsp; {new Intl.DateTimeFormat("fi-FI", {
               month: "numeric",
               day: "numeric",
               hour: "numeric",
