@@ -591,6 +591,18 @@ textarea {
     }
     button {
       padding: 4px 12px;
+      .loading-icon {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+      }
     }
   }
+}
+
+.no-messages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
 }

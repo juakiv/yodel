@@ -16,9 +16,23 @@ export async function GET(request) {
     }
   }
 
+  let channelClause = {
+    channel: {
+      name: "main"
+    }
+  };
+  if(params.has("channel")) {
+    channelClause = {
+      channel: {
+        name: params.get("channel")
+      }
+    }
+  }
+
   const posts = await prisma.post.findMany({
     where: {
       ...infiniteLoadingClause,
+      ...channelClause,
       parentPostId: null,
       deletedAt: null
     },

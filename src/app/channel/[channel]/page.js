@@ -1,7 +1,9 @@
+"use client";
+
+import PostsList from "@/components/PostsList";
+
 export default function Channel({ params }) {
   return (
-    <>
-      möö kanava {params.channel}
-    </>
+    <PostsList channel={params.channel} />
   )
 }
