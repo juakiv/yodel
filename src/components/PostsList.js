@@ -57,6 +57,7 @@ export default function PostsList({ channel }) {
 
   /* järjestely */
   const changeSorting = option => {
+    if(option === sorting) return false;
     setSorting(option);
     setPostsLoading(true);
     setPosts([]);

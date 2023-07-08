@@ -6,19 +6,9 @@ if (process.env.NODE_ENV === 'production') {
   prisma = new PrismaClient();
 } else {
   if (!global.prisma) {
-    global.prisma = new PrismaClient({
-      log: [
-        {
-          emit: "event",
-          level: "query"
-        }
-      ]
-    });
+    global.prisma = new PrismaClient();
   }
   prisma = global.prisma;
-  prisma.$on('query', (e) => {
-    console.log('Query: ' + e.query);
-  });
 }
 
 export default prisma;

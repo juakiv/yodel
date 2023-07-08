@@ -86,7 +86,11 @@ export async function GET(request) {
       },
       _count: {
         select: {
-          comment: true
+          comment: {
+            where: {
+              deletedAt: null
+            }
+          }
         }
       },
       votes: {
