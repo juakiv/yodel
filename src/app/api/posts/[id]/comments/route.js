@@ -113,5 +113,18 @@ export async function POST(request, { params }) {
     }
   });
 
+  if(newPost) {
+    await prisma.post.update({
+      where: {
+        id: parseInt(params.id)
+      },
+      data: {
+        commentsCount: {
+          increment: 1
+        }
+      }
+    })
+  }
+
   return NextResponse.json({ success: true, post: { ...newPost, votes: 0, myVote: false, myPost: true } });
 }

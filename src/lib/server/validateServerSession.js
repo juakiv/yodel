@@ -20,8 +20,7 @@ export default async function validateServerSession() {
       user: {
         select: {
           id: true,
-          email: true,
-          points: true
+          email: true
         }
       }
     }

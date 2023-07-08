@@ -60,6 +60,7 @@ model Post {
   votes      Vote[]
   votesCount Int      @default(0)
   comment    Post[]   @relation("commentParent")
+  commentsCount Int @default(0)
 
   channel    Channel? @relation(fields: [channelId], references: [id])
   channelId  Int?

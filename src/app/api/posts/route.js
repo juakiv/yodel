@@ -15,7 +15,7 @@ export async function GET(request) {
   let infiniteLoadingClause = {};
 
   if(sortType === "mostCommented") {
-    orderByClause = { comment: { _count: "desc" } }
+    orderByClause = { commentsCount: "desc" }
   } else if(sortType === "mostLiked") {
     orderByClause = { votesCount: "desc" }
   }
@@ -45,13 +45,15 @@ export async function GET(request) {
       infiniteLoadingClause = {
         OR: [
           {
-            _count: { comment: lastComments },
+            commentsCount: lastComments,
             createdAt: {
               lt: new Date(parseInt(params.get("last"))).toISOString()
             }
           },
           {
-            _count: { comment: { lt: lastComments } }
+            commentsCount: {
+              lt: lastComments
+            }
           }
         ]
       }

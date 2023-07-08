@@ -25,14 +25,30 @@ export async function DELETE(request, { params }) {
     return NextResponse.json({ success: false }, { status: 401 });
   }
 
-  await prisma.post.update({
+  const deleteAndSelectParent = await prisma.post.update({
     where: {
       id: parseInt(params.id)
     },
     data: {
       deletedAt: new Date().toISOString()
+    },
+    select: {
+      parentPostId: true
     }
   });
+
+  if(deleteAndSelectParent) {
+    await prisma.post.update({
+      where: {
+        id: deleteAndSelectParent.parentPostId
+      },
+      data: {
+        commentsCount: {
+          decrement: 1
+        }
+      }
+    });
+  }
 
   return NextResponse.json({ success: true });
 }

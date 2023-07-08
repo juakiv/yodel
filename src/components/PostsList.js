@@ -60,13 +60,18 @@ export default function PostsList({ channel }) {
     setSorting(option);
     setPostsLoading(true);
     setPosts([]);
+    setPostOpen(0);
     setLoadedAll(false);
     setLoadingMore(false);
   }
 
   /* lisää uusi viesti */
   const addNewPost = post => {
-    setPosts(oldPosts => [post, ...oldPosts]);
+    if(sorting === "latest") {
+      setPosts(oldPosts => [post, ...oldPosts]);
+    } else {
+      changeSorting("latest");
+    }
     setAddingPost(false);
   }
 
