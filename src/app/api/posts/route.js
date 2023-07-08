@@ -5,39 +5,56 @@ import prisma from "@/lib/server/prisma";
 
 export async function GET(request) {
   const user = await validateServerSession();
-
-  let infiniteLoadingClause = {};
   const params = request.nextUrl.searchParams;
-  if(params.has("last") && parseInt(params.get("last")) > 0) {
-    infiniteLoadingClause = {
-      createdAt: {
-        lt: new Date(parseInt(params.get("last"))).toISOString()
-      }
-    }
-  }
 
-  let channelClause = {
-    channel: {
-      name: "main"
-    }
-  };
-  if(params.has("channel")) {
-    channelClause = {
-      channel: {
-        name: params.get("channel")
-      }
-    }
-  }
+  const sortType = params.get("sort") || "latest";
+  const channel = params.get("channel") || "main";
 
+  const channelClause = { channel: { name: channel } };
   let orderByClause = {};
-  if(params.has("sort")) {
-    const sortType = params.get("sort");
-    if(sortType === "mostCommented") {
-      orderByClause = {
-        comment: {
-          _count: "desc"
-        }
-      };
+  let infiniteLoadingClause = {};
+
+  if(sortType === "mostCommented") {
+    orderByClause = { comment: { _count: "desc" } }
+  } else if(sortType === "mostLiked") {
+    orderByClause = { votesCount: "desc" }
+  }
+
+  if(params.has("last") && parseInt(params.get("last")) > 0) {
+    if(sortType === "latest") {
+      infiniteLoadingClause = { createdAt: { lt: new Date(parseInt(params.get("last"))).toISOString() } }
+    } else if(sortType === "mostLiked") {
+      const lastVotes = parseInt(params.get("lastLike")) || 0;
+      infiniteLoadingClause = {
+        OR: [
+          {
+            votesCount: lastVotes,
+            createdAt: {
+              lt: new Date(parseInt(params.get("last"))).toISOString()
+            }
+          },
+          {
+            votesCount: {
+              lt: lastVotes
+            }
+          }
+        ]
+      }
+    } else if(sortType === "mostCommented") {
+      const lastComments = parseInt(params.get("lastComment")) || 0;
+      infiniteLoadingClause = {
+        OR: [
+          {
+            _count: { comment: lastComments },
+            createdAt: {
+              lt: new Date(parseInt(params.get("last"))).toISOString()
+            }
+          },
+          {
+            _count: { comment: { lt: lastComments } }
+          }
+        ]
+      }
     }
   }
 
@@ -52,7 +69,7 @@ export async function GET(request) {
       orderByClause,
       {
         createdAt: "desc"
-      }
+      },
     ],
     select: {
       id: true,

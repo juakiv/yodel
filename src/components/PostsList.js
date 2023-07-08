@@ -37,9 +37,9 @@ export default function PostsList({ channel }) {
   const [sorting, setSorting] = useState("latest");
 
   /* HAE VIESTIT */
-  const getPosts = async (timestamp = 0) => {
+  const getPosts = async (timestamp = 0, lastLike = 0, lastComment = 0) => {
     setPostsLoading(true);
-    const req = await fetch(`/api/posts?last=${timestamp}&channel=${channel}&sort=${sorting}`);
+    const req = await fetch(`/api/posts?last=${timestamp}&channel=${channel}&sort=${sorting}&lastLike=${lastLike}&lastComment=${lastComment}`);
     const fetchedPosts = await req.json();
 
     if (fetchedPosts.length < 10) {
@@ -79,8 +79,9 @@ export default function PostsList({ channel }) {
 
   useEffect(() => {
     if (loadingMore && posts.length > 0 && !loadedAll) {
-      const lastLoadedPostTimestamp = new Date(posts[posts.length - 1].createdAt).getTime();
-      getPosts(lastLoadedPostTimestamp);
+      const lastPost = posts[posts.length - 1];
+      const lastLoadedPostTimestamp = new Date(lastPost.createdAt).getTime();
+      getPosts(lastLoadedPostTimestamp, lastPost.votes, lastPost._count.comment);
     }
   }, [loadingMore]);
 
