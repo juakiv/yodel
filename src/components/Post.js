@@ -63,6 +63,7 @@ export default function Post({ post, commentsOpen, deletePost, openPost }) {
 
     if (success) {
       setComments([...comments.filter(comment => comment.id !== postId)]);
+      post._count.comment--;
       toast("Kommentti poistettu.", { theme: "dark", autoClose: 5000, position: "top-center" });
     } else {
       toast("Kommentin poistaminen epäonnistui.", { theme: "dark", autoClose: 5000, position: "top-center" });

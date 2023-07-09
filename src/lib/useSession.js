@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+"use client";
+
 import useSWR from "swr";
 
 export default function useSession() {
@@ -7,14 +8,6 @@ export default function useSession() {
     revalidateOnFocus: false,
     revalidateOnReconnect: false
   });
-
-  useEffect(() => {
-    if(!user) return;
-
-    if(!user.isLoggedIn) {
-      console.log("Ei kirjautunu...");
-    }
-  }, [user]);
 
   return { user };
 }

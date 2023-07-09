@@ -8,6 +8,7 @@ export default function NewPost({ addNewPost, channel }) {
 
   const [selectedColor, setSelectedColor] = useState("yellow");
   const [sendingPost, setSendingPost] = useState(false);
+  const [content, setContent] = useState("");
 
   const onSubmit = async event => {
     event.preventDefault();
@@ -17,28 +18,34 @@ export default function NewPost({ addNewPost, channel }) {
 
     const result = await fetch("/api/posts", {
       method: "POST",
-      body: JSON.stringify({ channel, ...Object.fromEntries(formData) })
+      body: JSON.stringify({ channel, content, ...Object.fromEntries(formData) })
     });
-    const { success, post } = await result.json();
+    const { success, message, post } = await result.json();
 
     if (success) {
       addNewPost(post);
     } else {
       setSendingPost(false);
-      toast("Viestin lähettäminen epäonnistui.", { theme: "dark", autoClose: 5000, position: "top-center" });
+      toast(message, { theme: "dark", autoClose: 5000, position: "top-center" });
     }
-
   }
+
   return (
     <form className="new-post" onSubmit={e => onSubmit(e)}>
-      <textarea name="content" placeholder="Mitä mielessä?"></textarea>
+      <textarea maxLength="240" name="content" placeholder="Mitä mielessä?" onChange={e => setContent(e.target.value)} value={content}></textarea>
 
       <div className="new-post-controls">
-        {sendingPost ?
-          <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Yodlaa</button>
-          :
-          <button type="submit">Yodlaa</button>
-        }
+        <div className="new-post-button">
+          {sendingPost ?
+            <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Yodlaa</button>
+            :
+            <button type="submit">Yodlaa</button>
+          }
+          <div className="post-max-length-indicator">
+            <div className="post-max-length-circle" style={{ "--progress": `${(content.length * 100) / 240}%` }}></div>
+            {content.length} merkkiä
+          </div>
+        </div>
         <div className="color-selector">
           {colors.map(color =>
             <label key={color}>

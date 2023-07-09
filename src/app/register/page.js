@@ -1,13 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { mutate } from "swr";
 
 import useSession from "@/lib/useSession";
 
 export default function Register() {
   const { user } = useSession();
   const router = useRouter();
+
+  const [isRegistering, setIsRegistering] = useState(false);
 
   useEffect(() => {
     if (user && user.isLoggedIn) {
@@ -17,7 +21,9 @@ export default function Register() {
 
   const handleRegisterSubmit = async e => {
     e.preventDefault();
-    
+    if (isRegistering) return false;
+    setIsRegistering(true);
+
     const formData = new FormData(e.target);
     const { email, password, password_again } = Object.fromEntries(formData);
 
@@ -25,14 +31,15 @@ export default function Register() {
       method: "POST",
       body: JSON.stringify({ email, password, password_again })
     });
-    const { success } = await result.json();
+    const { success, message } = await result.json();
 
-    if(success) {
+    if (success) {
       mutate("/api/session");
       router.push("/");
       router.refresh();
     } else {
-      alert("hups");
+      toast(message, { theme: "dark", autoClose: 5000, position: "top-center" });
+      setIsRegistering(false);
     }
   }
 
@@ -44,18 +51,22 @@ export default function Register() {
       <form onSubmit={e => handleRegisterSubmit(e)}>
         <label>
           Sähköpostiosoite
-          <input type="email" name="email" />
+          <input type="email" name="email" required />
         </label>
         <label>
           Salasana
-          <input type="password" name="password" />
+          <input type="password" name="password" required />
         </label>
         <label>
           Salasana uudelleen
-          <input type="password" name="password_again" />
+          <input type="password" name="password_again" required />
         </label>
 
-        <button type="submit">Luo tili</button>
+        {isRegistering ?
+          <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Luo tili</button>
+          :
+          <button type="submit">Luo tili</button>
+        }
       </form>
     </div>
   )

@@ -1,24 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { mutate } from "swr";
+import { toast } from "react-toastify";
 
 import useSession from "@/lib/useSession";
-import { mutate } from "swr";
 
 export default function Login() {
   const { user } = useSession();
   const router = useRouter();
 
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   useEffect(() => {
-    if(user && user.isLoggedIn) {
+    if (user && user.isLoggedIn) {
       router.push("/");
     }
   }, [user]);
 
   const handleLoginSubmit = async e => {
     e.preventDefault();
-    
+    if (isLoggingIn) return false;
+
+    setIsLoggingIn(true);
+
     const formData = new FormData(e.target);
     const { email, password } = Object.fromEntries(formData);
 
@@ -26,14 +32,15 @@ export default function Login() {
       method: "POST",
       body: JSON.stringify({ email, password })
     });
-    const { success } = await result.json();
+    const { success, message } = await result.json();
 
-    if(success) {
+    if (success) {
       mutate("/api/session");
       router.push("/");
       router.refresh();
     } else {
-      alert("hups");
+      toast(message, { theme: "dark", autoClose: 5000, position: "top-center" });
+      setIsLoggingIn(false);
     }
   }
 
@@ -45,14 +52,18 @@ export default function Login() {
       <form onSubmit={e => handleLoginSubmit(e)}>
         <label>
           Sähköpostiosoite
-          <input type="email" name="email" />
+          <input type="email" name="email" required />
         </label>
         <label>
           Salasana
-          <input type="password" name="password" />
+          <input type="password" name="password" required />
         </label>
 
-        <button type="submit">Kirjaudu sisään</button>
+        {isLoggingIn ?
+          <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Kirjaudu sisään</button>
+          :
+          <button type="submit">Kirjaudu sisään</button>
+        }
       </form>
     </div>
   )

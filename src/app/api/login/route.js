@@ -9,7 +9,8 @@ export async function POST(request) {
 
   if(user) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Olet jo kirjautunut."
     }, {
       status: 401
     });
@@ -17,9 +18,10 @@ export async function POST(request) {
 
   const data = await request.json();
 
-  if (!["email", "password"].every(field => Object.keys(data).includes(field))) {
+  if (!["email", "password"].every(field => Object.keys(data).includes(field) && data[field] !== "")) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Molemmat kentät ovat pakollisia."
     }, {
       status: 422
     });
@@ -33,7 +35,8 @@ export async function POST(request) {
 
   if (!findEmail) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Käyttäjätunnus tai salasana on väärä."
     }, {
       status: 422
     });
@@ -42,7 +45,8 @@ export async function POST(request) {
   const passwordMatch = await bcrypt.compare(data.password, findEmail.password);
   if(!passwordMatch) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Käyttäjätunnus tai salasana on väärä."
     }, {
       status: 422
     });
@@ -58,7 +62,8 @@ export async function POST(request) {
   });
 
   const response = NextResponse.json({
-    success: true
+    success: true,
+    message: "success"
   });
   response.cookies.set("sessionToken", token);
   return response;

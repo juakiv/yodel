@@ -9,7 +9,8 @@ export async function POST(request) {
 
   if(user) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Olet jo kirjautunut."
     }, {
       status: 401
     });
@@ -17,9 +18,10 @@ export async function POST(request) {
 
   const data = await request.json();
 
-  if (!["email", "password", "password_again"].every(field => Object.keys(data).includes(field))) {
+  if (!["email", "password", "password_again"].every(field => Object.keys(data).includes(field) && data[field] !== "")) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Kaikki kentät ovat pakollisia."
     }, {
       status: 422
     });
@@ -33,7 +35,8 @@ export async function POST(request) {
 
   if (isEmailInUse) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Antamallasi sähköpostilla on jo tehty tili."
     }, {
       status: 422
     });
@@ -41,7 +44,17 @@ export async function POST(request) {
 
   if (data.password !== data.password_again) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Salasanat eivät täsmää."
+    }, {
+      status: 422
+    });
+  }
+
+  if(data.password.length < 6) {
+    return NextResponse.json({
+      success: false,
+      message: "Salasanan tulee olla vähintään 6 merkkiä."
     }, {
       status: 422
     });
@@ -64,7 +77,8 @@ export async function POST(request) {
 
   if(!createdUser) {
     return NextResponse.json({
-      success: false
+      success: false,
+      message: "Käyttäjätilin luominen epäonnistui."
     }, {
       status: 422
     });

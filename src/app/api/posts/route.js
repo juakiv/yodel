@@ -121,17 +121,21 @@ export async function POST(request) {
   const user = await validateServerSession();
 
   if (!user) {
-    return NextResponse.json({ success: false }, { status: 401 });
+    return NextResponse.json({ success: false, message: "Et ole kirjautunut sisään." }, { status: 401 });
   }
 
   const data = await request.json();
 
   if (data.content === null || data.content === "") {
-    return NextResponse.json({ success: false }, { status: 422 });
+    return NextResponse.json({ success: false, message: "Viesti on pakollinen." }, { status: 422 });
+  }
+
+  if(data.content.length > 240) {
+    return NextResponse.json({ success: false, message: "Viesti on liian pitkä." }, { status: 422 });
   }
 
   if (!("color" in data) || !("color" in data && ["yellow", "red", "lilac", "aqua", "green"].includes(data.color)) || !"channel" in data) {
-    return NextResponse.json({ success: false }, { status: 422 });
+    return NextResponse.json({ success: false, message: "Viestin väri on virheellinen." }, { status: 422 });
   }
   
   const channel = await prisma.channel.findFirst({
@@ -145,7 +149,7 @@ export async function POST(request) {
   });
   
   if(!channel) {
-    return NextResponse.json({ success: false }, { status: 422 });
+    return NextResponse.json({ success: false, message: "Kanavaa ei löytynyt." }, { status: 422 });
   }
 
   const newPost = await prisma.post.create({
@@ -168,5 +172,5 @@ export async function POST(request) {
     }
   });
 
-  return NextResponse.json({ success: true, post: { ...newPost, channel: channel.name, votes: 0, myVote: false, myPost: true } });
+  return NextResponse.json({ success: true, message: "success", post: { ...newPost, channel: channel.name, votes: 0, myVote: false, myPost: true } });
 }
