@@ -16,7 +16,8 @@ export default async function validateServerSession() {
         gte: new Date()
       }
     },
-    include: {
+    select: {
+      id: true,
       user: {
         select: {
           id: true,
@@ -29,6 +30,8 @@ export default async function validateServerSession() {
   if(!user) {
     return false;
   }
+
+  user.user["sessionId"] = user.id;
 
   return user.user;
 }

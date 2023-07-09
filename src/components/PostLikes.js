@@ -12,7 +12,6 @@ export default function PostLikes({ postId, initialVotes, myVote }) {
   const [downVoteStatus, setDownVoteStatus] = useState(myVote === "DOWN" ? "voted" : "regular"); // regular, loading, voted, disabled
 
   const onVoteUpPressed = async () => {
-    console.log(user && user.isLoggedIn);
     if (!user || !user.isLoggedIn || upVoteStatus !== "regular") return false;
 
     setDownVoteStatus("disabled");
