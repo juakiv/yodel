@@ -41,9 +41,9 @@ export default function NewPost({ addNewPost, channel }) {
             :
             <button type="submit">Yodlaa</button>
           }
-          <div className="post-max-length-indicator">
-            <div className="post-max-length-circle" style={{ "--progress": `${(content.length * 100) / 240}%` }}></div>
-            {content.length} merkkiä
+          <div className={`post-max-length-indicator${content.length > 200 ? content.length === 240 ? " post-text--red" : " post-text--yellow" : ""}`}>
+            <div className="post-max-length-circle" style={{ "--progress": `${Math.ceil((content.length * 100) / 240)}%` }}></div>
+            {content.length} merkki{content.length !== 1 && "ä"}
           </div>
         </div>
         <div className="color-selector">

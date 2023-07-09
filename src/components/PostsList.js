@@ -130,7 +130,7 @@ export default function PostsList({ channel }) {
           </div>}
         </div>
         {addingPost && user && user.isLoggedIn && <NewPost channel={channel} addNewPost={addNewPost} />}
-        {postsLoading && [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(loadingPost => <div key={`loading-post-${loadingPost}`} className="post" style={{ flexDirection: "column" }}>
+        {postsLoading && posts.length === 0 && [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(loadingPost => <div key={`loading-post-${loadingPost}`} className="post" style={{ flexDirection: "column" }}>
           <div className="post-loading" style={{ width: 200, height: 16, marginBottom: 16 }}></div>
           <div className="post-loading" style={{ width: "50%", height: 20, marginBottom: 16 }}></div>
           <div className="post-loading" style={{ width: 100, height: 12 }}></div>

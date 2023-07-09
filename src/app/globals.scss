@@ -143,6 +143,7 @@ textarea {
     margin: -3px -3px 0;
     &-option {
       cursor: pointer;
+      text-align: center;
       background-color: rgba(255 255 255 / 4%);
       padding: 10px 14px;
       border-radius: 6px;
@@ -366,7 +367,7 @@ textarea {
     width: 22px;
     height: 22px;
     margin-right: 6px;
-    background: conic-gradient(#c1254b var(--progress), rgba(255 255 255 / 8%) 0deg);
+    background: conic-gradient(currentColor var(--progress), rgba(255 255 255 / 8%) 0deg);
     position: relative;
     &::before {
       content: "";
@@ -655,4 +656,18 @@ textarea {
   justify-content: center;
   align-items: center;
   padding: 50px;
+}
+
+@media only screen and (max-width: 680px) {
+  .posts-top {
+    flex-direction: column;
+  }
+  .posts-sorting-option {
+    flex: 1;
+    margin-bottom: 10px;
+  }
+  .posts-new {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
