@@ -153,7 +153,7 @@ export default function Settings() {
         </div>
       </div>}
       {sessions.map(session =>
-        <div className="session">
+        <div className="session" key={session.id}>
           <div className="session-data">
             <span>{session.current ? "Nykyinen sessio" : "Muu sessio"}</span>
             Viimeksi nähty {new Intl.DateTimeFormat("fi-FI", {

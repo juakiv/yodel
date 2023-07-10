@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
         <div className="container">
           <div className="header">
             <Link href="/" className="logo">
-              <img width="40" height="40" className="logo" src="/logo.png" />
+              <img alt="logo" width="40" height="40" className="logo" src="/logo.png" />
               <span className={lobster.className}>Yodel</span>
             </Link>
             <div className="header-user-area">
