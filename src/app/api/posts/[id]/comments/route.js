@@ -54,13 +54,17 @@ export async function POST(request, { params }) {
   const user = await validateServerSession();
 
   if (!user) {
-    return NextResponse.json({ success: false }, { status: 401 });
+    return NextResponse.json({ success: false, message: "Et ole kirjautunut sisään." }, { status: 401 });
   }
 
   const data = await request.json();
 
   if (data.content === null || data.content === "") {
-    return NextResponse.json({ success: false }, { status: 422 });
+    return NextResponse.json({ success: false, message: "Kommentti ei voi olla tyhjä." }, { status: 422 });
+  }
+
+  if(data.content.length > 240) {
+    return NextResponse.json({ success: false, message: "Kommentti on liian pitkä." }, { status: 422 });
   }
 
   const parentPost = await prisma.post.findFirst({
@@ -81,7 +85,7 @@ export async function POST(request, { params }) {
   });
 
   if(!parentPost) {
-    return NextResponse.json({ success: false }, { status: 422 });
+    return NextResponse.json({ success: false, message: "Aloitusviesti on poistettu." }, { status: 422 });
   }
 
   let tag = 0;

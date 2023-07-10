@@ -8,18 +8,18 @@ export async function POST(request) {
   const user = await validateServerSession();
 
   if (!user) {
-    return NextResponse.json({ success: false }, { status: 401 });
+    return NextResponse.json({ success: false, message: "Et ole kirjautunut sisään." }, { status: 401 });
   }
 
   const data = await request.json();
   if (!["post", "type"].every(field => Object.keys(data).includes(field))) {
-    return NextResponse.json({ success: false }, {
+    return NextResponse.json({ success: false, message: "Jokin meni vikaan." }, {
       status: 422
     });
   }
 
   if (!["UP", "DOWN"].includes(data.type)) {
-    return NextResponse.json({ success: false }, {
+    return NextResponse.json({ success: false, message: "Jokin meni vikaan." }, {
       status: 422
     });
   }

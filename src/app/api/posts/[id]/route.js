@@ -7,7 +7,7 @@ export async function DELETE(request, { params }) {
   const user = await validateServerSession();
 
   if (!user) {
-    return NextResponse.json({ success: false }, { status: 401 });
+    return NextResponse.json({ success: false, message: "Et ole kirjautunut sisään." }, { status: 401 });
   }
   
   const post = await prisma.post.findFirst({
@@ -18,11 +18,11 @@ export async function DELETE(request, { params }) {
   });
   
   if(!post) {
-    return NextResponse.json({ success: false }, { status: 422 });
+    return NextResponse.json({ success: false, message: "Viestiä ei löytynyt." }, { status: 422 });
   }
   
   if(post.userId !== user.id) {
-    return NextResponse.json({ success: false }, { status: 401 });
+    return NextResponse.json({ success: false, message: "Tämä viesti ei ole sinun." }, { status: 401 });
   }
 
   const deleteAndSelectParent = await prisma.post.update({

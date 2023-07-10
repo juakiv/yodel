@@ -42,7 +42,7 @@ export default function Post({ post, commentsOpen, deletePost, openPost }) {
       method: "POST",
       body: JSON.stringify({ content: commentField })
     });
-    const { success, post: addedComment } = await result.json();
+    const { success, message, post: addedComment } = await result.json();
     setSendingComment(false);
 
     if (success) {
@@ -50,7 +50,7 @@ export default function Post({ post, commentsOpen, deletePost, openPost }) {
       setComments([...comments, addedComment]);
       post._count.comment++;
     } else {
-      toast("Viestin lähettäminen epäonnistui.", { theme: "dark", autoClose: 5000, position: "top-center" });
+      toast(message, { theme: "dark", autoClose: 5000, position: "top-center" });
     }
   }
 
@@ -59,14 +59,14 @@ export default function Post({ post, commentsOpen, deletePost, openPost }) {
     const req = await fetch(`/api/posts/${postId}`, {
       method: "DELETE"
     });
-    const { success } = await req.json();
+    const { success, message } = await req.json();
 
     if (success) {
       setComments([...comments.filter(comment => comment.id !== postId)]);
       post._count.comment--;
       toast("Kommentti poistettu.", { theme: "dark", autoClose: 5000, position: "top-center" });
     } else {
-      toast("Kommentin poistaminen epäonnistui.", { theme: "dark", autoClose: 5000, position: "top-center" });
+      toast(message, { theme: "dark", autoClose: 5000, position: "top-center" });
     }
   }
 
@@ -123,7 +123,7 @@ export default function Post({ post, commentsOpen, deletePost, openPost }) {
         </div>
         )}
         {user && user.isLoggedIn && <form className="post-comment" onSubmit={e => submitComment(e)}>
-          <textarea onChange={e => setCommentField(e.target.value)} value={commentField} placeholder="Kirjoita kommenttisi..." style={{ minHeight: 30, marginRight: 12 }}></textarea>
+          <textarea onChange={e => setCommentField(e.target.value)} value={commentField} placeholder="Kirjoita kommenttisi..." style={{ minHeight: 30, marginRight: 12 }} maxLength="240"></textarea>
           {sendingComment ?
             <button type="submit" disabled><div className="loading-icon loading-icon--button"></div> Kommentoi</button>
             :
