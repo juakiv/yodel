@@ -658,6 +658,26 @@ textarea {
   padding: 50px;
 }
 
+.settings-page {
+  padding: 20px 25px;
+  h1 {
+    margin-bottom: 20px;
+  }
+  p {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-bottom: 20px;
+  }
+  form {
+    margin-bottom: 40px;
+  }
+  input {
+    max-width: 300px;
+    display: block;
+    margin: 5px 0 10px;
+  }
+}
+
 @media only screen and (max-width: 680px) {
   .posts-top {
     flex-direction: column;

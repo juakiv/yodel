@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import prisma from "@/lib/server/prisma";
 import validateServerSession from "@/lib/server/validateServerSession";
+import validateEmail from "@/lib/server/validateEmail";
 
 export async function POST(request) {
   const user = await validateServerSession();
@@ -22,6 +23,15 @@ export async function POST(request) {
     return NextResponse.json({
       success: false,
       message: "Kaikki kentät ovat pakollisia."
+    }, {
+      status: 422
+    });
+  }
+
+  if(!validateEmail(data.email)) {
+    return NextResponse.json({
+      success: false,
+      message: "Sähköpostiosoite on epäkelpo."
     }, {
       status: 422
     });
