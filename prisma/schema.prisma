@@ -36,6 +36,7 @@ model Session {
 
   createdAt DateTime @default(now())
   expiresAt DateTime
+  lastSeen DateTime?
 
   @@index([userId])
 }

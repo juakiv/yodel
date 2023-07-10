@@ -19,6 +19,10 @@ export default function Settings() {
   const [passwordAgain, setPasswordAgain] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
 
+  const [sessionsLoading, setSessionsLoading] = useState(true);
+  const [sessions, setSessions] = useState([]);
+  const [loggingOutSession, setLoggingOutSession] = useState(false);
+
   const updateEmail = async e => {
     e.preventDefault();
 
@@ -45,7 +49,7 @@ export default function Settings() {
 
   const updatePassword = async e => {
     e.preventDefault();
-    if(changingPassword) return false;
+    if (changingPassword) return false;
 
     setChangingPassword(true);
 
@@ -56,7 +60,7 @@ export default function Settings() {
     const { success, message } = await req.json();
 
     setChangingPassword(false);
-    if(success) {
+    if (success) {
       setCurrentPassword("");
       setPassword("");
       setPasswordAgain("");
@@ -65,13 +69,42 @@ export default function Settings() {
       toast(message, { theme: "dark", autoClose: 5000, position: "top-center" });
     }
   }
+  
+  const getSessions = async () => {
+    const req = await fetch("/api/settings/sessions");
+    const loadedSessions = await req.json();
+    
+    setSessions(loadedSessions);
+    setSessionsLoading(false);
+  }
+  
+  const logOutSession = async id => {
+    if(loggingOutSession) return false;
+    setLoggingOutSession(true);
+    
+    const req = await fetch("/api/settings/sessions", {
+      method: "POST",
+      body: JSON.stringify({ id })
+    });
+    const { success, message, session } = await req.json();
+    
+    setLoggingOutSession(false);
+
+    if(success) {
+      setSessions(currentSessions => currentSessions.filter(currentSession => currentSession.id !== session));
+      toast("Sessio suljettiin onnistuneesti.", { theme: "dark", autoClose: 5000, position: "top-center" });
+    } else {
+      toast(message, { theme: "dark", autoClose: 5000, position: "top-center" });
+    }
+  }
 
   useEffect(() => {
     if (user && !user.isLoggedIn) {
       router.push("/");
+    } else if (user && user.isLoggedIn) {
+      getSessions();
     }
   }, [user]);
-
   if (!user) return <></>
 
   return (
@@ -112,6 +145,35 @@ export default function Settings() {
           <button type="submit">Vaihda salasana</button>
         }
       </form>
+
+      <h3>Aktiiviset sessiot</h3>
+      {sessionsLoading && <div className="infinite-loading-icon">
+        <div className="loading-icon-holder">
+          <div className="loading-icon"></div>
+        </div>
+      </div>}
+      {sessions.map(session =>
+        <div className="session">
+          <div className="session-data">
+            <span>{session.current ? "Nykyinen sessio" : "Muu sessio"}</span>
+            Viimeksi nähty {new Intl.DateTimeFormat("fi-FI", {
+                month: "numeric",
+                day: "numeric",
+                year: "numeric"
+              }).format(new Date(session.lastSeen))} kello {new Intl.DateTimeFormat("fi-FI", {
+                hour: "numeric",
+                minute: "numeric"
+              }).format(new Date(session.lastSeen))}
+          </div>
+          {!session.current && <>
+            {loggingOutSession ?
+            <button disabled><div className="loading-icon loading-icon--button"></div></button>
+            :
+            <button onClick={() => logOutSession(session.id)}>Kirjaa ulos</button>
+            }
+          </>}
+        </div>
+      )}
     </div>
   )
 }

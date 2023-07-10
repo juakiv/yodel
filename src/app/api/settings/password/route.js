@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 import validateServerSession from "@/lib/server/validateServerSession";
+import prisma from "@/lib/server/prisma";
 
 export async function POST(request) {
   const user = await validateServerSession();

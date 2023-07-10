@@ -18,6 +18,7 @@ export default async function validateServerSession() {
     },
     select: {
       id: true,
+      token: true,
       user: {
         select: {
           id: true,
@@ -32,6 +33,6 @@ export default async function validateServerSession() {
   }
 
   user.user["sessionId"] = user.id;
-
+  user.user["token"] = user.token;
   return user.user;
 }
