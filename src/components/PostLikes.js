@@ -2,17 +2,22 @@
 
 import useSession from "@/lib/useSession";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function PostLikes({ postId, initialVotes, myVote }) {
 
-  const { user } = useSession(); 
+  const { user } = useSession();
 
   const [likes, setLikes] = useState(initialVotes);
   const [upVoteStatus, setUpVoteStatus] = useState(myVote === "UP" ? "voted" : "regular"); // regular, loading, voted, disabled
   const [downVoteStatus, setDownVoteStatus] = useState(myVote === "DOWN" ? "voted" : "regular"); // regular, loading, voted, disabled
 
   const onVoteUpPressed = async () => {
-    if (!user || !user.isLoggedIn || upVoteStatus !== "regular") return false;
+    if (!user || !user.isLoggedIn) {
+      toast("Kirjaudu sisään äänestääksesi.", { theme: "dark", autoClose: 5000, position: "top-center" });
+      return false;
+    }
+    if (upVoteStatus !== "regular") return false;
 
     setDownVoteStatus("disabled");
     setUpVoteStatus("loading");
@@ -32,7 +37,11 @@ export default function PostLikes({ postId, initialVotes, myVote }) {
   }
 
   const onVoteDownPressed = async () => {
-    if (!user || !user.isLoggedIn || downVoteStatus !== "regular") return false;
+    if (!user || !user.isLoggedIn) {
+      toast("Kirjaudu sisään äänestääksesi.", { theme: "dark", autoClose: 5000, position: "top-center" });
+      return false;
+    }
+    if (downVoteStatus !== "regular") return false;
 
     setUpVoteStatus("disabled");
     setDownVoteStatus("loading");
