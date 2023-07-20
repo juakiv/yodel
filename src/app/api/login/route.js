@@ -53,10 +53,11 @@ export async function POST(request) {
   }
   
   const token = [...Array(40)].map(() => Math.random().toString(36)[2]).join('');
+  const nextMonth = new Date(new Date().setMonth(new Date().getMonth() + 1));
   await prisma.session.create({
     data: {
       token: token,
-      expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
+      expiresAt: nextMonth.toISOString(),
       userId: findEmail.id
     }
   });
@@ -65,6 +66,6 @@ export async function POST(request) {
     success: true,
     message: "success"
   });
-  response.cookies.set("sessionToken", token);
+  response.cookies.set("sessionToken", token, { expires: nextMonth });
   return response;
 }

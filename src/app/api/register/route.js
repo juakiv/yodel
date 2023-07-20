@@ -72,6 +72,7 @@ export async function POST(request) {
 
   const hashedPassword = await bcrypt.hash(data.password, 10);
   const token = [...Array(40)].map(() => Math.random().toString(36)[2]).join('');
+  const nextMonth = new Date(new Date().setMonth(new Date().getMonth() + 1));
   const createdUser = await prisma.user.create({
     data: {
       email: data.email,
@@ -79,7 +80,7 @@ export async function POST(request) {
       sessions: {
         create: {
           token: token,
-          expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
+          expiresAt: nextMonth.toISOString()
         }
       }
     }
@@ -97,6 +98,6 @@ export async function POST(request) {
   const response = NextResponse.json({
     success: true
   });
-  response.cookies.set("sessionToken", token);
+  response.cookies.set("sessionToken", token, { expires: nextMonth });
   return response;
 }

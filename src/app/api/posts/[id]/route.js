@@ -37,7 +37,7 @@ export async function DELETE(request, { params }) {
     }
   });
 
-  if(deleteAndSelectParent) {
+  if(deleteAndSelectParent && deleteAndSelectParent.parentPostId !== null) {
     await prisma.post.update({
       where: {
         id: deleteAndSelectParent.parentPostId
